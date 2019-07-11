@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import './question.dart';
-import './answer.dart';
+import './quiz.dart';
+import './result.dart';
 
 void main() => runApp(MyApp());
 
@@ -13,47 +13,69 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  int _questionindex = 0;
+  int _questionIndex = 0;
+  int _totalScore = 0;
 
-  void _answerQuestion() {
+  final _questions = const [
+    {
+      "questionText": "What is your favorite color",
+      "answers": [
+        {"text": "Black", "score": 10},
+        {"text": "Red", "score": 5},
+        {"text": "Green", "score": 3},
+        {"text": "White", "score": 1},
+      ]
+    },
+    {
+      "questionText": "What's your favorite animal?",
+      "answers": [
+        {"text": "Rabbit", "score": 3},
+        {"text": "Snake", "score": 11},
+        {"text": "Elephant", "score": 5},
+        {"text": "Lion", "score": 9},
+      ]
+    },
+    {
+      "questionText": "Who's your favorite person",
+      "answers": [
+        {"text": "Pitrens", "score": 1},
+        {"text": "Ernst", "score": 1},
+        {"text": "Muneco", "score": 1},
+        {"text": "Peter", "score": 1},
+      ]
+    }
+  ];
+
+  void _answerQuestion(int score) {
+    _totalScore += score;
+
     setState(() {
-      _questionindex++;
+      _questionIndex++;
     });
-    print('I am pressed ' + _questionindex.toString());
+  }
+
+  void _restartQuiz(){
+    setState(() {
+      _questionIndex = 0;
+      _totalScore = 0;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    const _questions = [
-      {
-        "questionText": "EVENT",
-        "answers": ["Admin", "Email User", "Login User","guest user"]
-      },
-      {
-        "questionText": "PROXIMITY",
-        "answers": ["Taipei", "Tainan", "Kaoshiung"]
-      },
-      {
-        "questionText": "GLOBAL",
-        "answers": ["Taiwan", "Singapore", "Malasia"]
-      }
-    ];
+    return buildMaterialApp();
+  }
 
+  MaterialApp buildMaterialApp() {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
           title: Text('Oiyster'),
           backgroundColor: Colors.orange,
         ),
-        body: Column(
-          children: [
-            Question(_questions[_questionindex]['questionText']),
-            ...(_questions[_questionindex]['answers'] as List<String>)
-                .map((answer) {
-              return Answer(answer, _answerQuestion);
-            }).toList(),
-          ],
-        ),
+        body: _questionIndex < _questions.length
+            ? Quiz(_questions[_questionIndex], _answerQuestion)
+            : Result(_totalScore , _restartQuiz),
       ),
     );
   }
