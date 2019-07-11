@@ -16,8 +16,8 @@ class _MyAppState extends State<MyApp> {
   var _questionindex = 0;
 
   final _questions = [
-    "What's your favorite color?",
-    "What's your favorite animal"
+    "EVENT",
+    "PROXIMITY"
   ];
 
   void _answerQuestion() {
