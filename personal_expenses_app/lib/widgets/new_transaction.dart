@@ -21,7 +21,9 @@ class _NewTransactionState extends State<NewTransaction> {
     final enteredTitle = _titleController.text;
     final enteredAmount = double.parse(_amountController.text);
 
-    if (enteredTitle.isEmpty || enteredAmount.isNegative || _selectedDate == null) {
+    if (enteredTitle.isEmpty ||
+        enteredAmount.isNegative ||
+        _selectedDate == null) {
       return;
     }
 
@@ -37,21 +39,20 @@ class _NewTransactionState extends State<NewTransaction> {
     Navigator.of(context).pop();
   }
 
-  void _presentDatePicker() {
-    showDatePicker(
-            context: context,
-            initialDate: DateTime.now(),
-            firstDate: DateTime(2019),
-            lastDate: DateTime.now())
-        .then((pickedDate) {
-      if (pickedDate == null) {
-        return;
-      }
+  void _presentDatePicker() async {
+    DateTime pickedDate = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2019),
+        lastDate: DateTime.now());
 
+    if (pickedDate == null) {
+      return;
+    } else {
       setState(() {
         _selectedDate = pickedDate;
       });
-    });
+    }
   }
 
   @override
