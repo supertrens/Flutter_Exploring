@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import './widgets/transaction_list.dart';
 import './widgets/new_transaction.dart';
+import './widgets/chart.dart';
 import './models/transaction.dart';
 
 void main() => runApp(MyApp());
@@ -14,7 +15,21 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.purple,
         accentColor: Colors.amber,
-        fontFamily: 'Quicksand'
+        fontFamily: 'Quicksand',
+        textTheme: ThemeData.light().textTheme.copyWith(
+              title: TextStyle(
+                  fontFamily: 'OpenSans',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18),
+            ),
+        appBarTheme: AppBarTheme(
+          textTheme: ThemeData.light().textTheme.copyWith(
+                title: TextStyle(
+                    fontFamily: 'OpenSans',
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
+              ),
+        ),
       ),
       home: MyHomePage(),
     );
@@ -29,6 +44,16 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _userTransactions = [];
 
+  List<Transaction> get _recentTransaction {
+    return _userTransactions.where((tx) {
+      return tx.date.isAfter(
+        DateTime.now().subtract(
+          Duration(days: 7),
+        ),
+      );
+    }).toList();
+  }
+
   void _addNewTransaction(newTransaction) {
     setState(() {
       _userTransactions.add(newTransaction);
@@ -40,23 +65,26 @@ class _MyHomePageState extends State<MyHomePage> {
       context: ctx,
       builder: (_) {
         return GestureDetector(
-          onTap: (){},
-          behavior: HitTestBehavior.opaque ,
-          child:NewTransaction(_addNewTransaction),
+          onTap: () {},
+          behavior: HitTestBehavior.opaque,
+          child: NewTransaction(_addNewTransaction),
         );
       },
-    ); 
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Expense App'),
+        title: Text(
+          'Expense App',
+          style: TextStyle(fontFamily: 'Open Sans'),
+        ),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add),
-            onPressed:() => _showNewTransactionForm(context),
+            onPressed: () => _showNewTransactionForm(context),
           )
         ],
       ),
@@ -65,16 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Container(
-                width: double.infinity,
-                child: Card(
-                  color: Colors.white12,
-                  child: Container(
-                    child: Text("cardTitle"),
-                  ),
-                  elevation: 10,
-                ),
-              ),
+              Chart(_recentTransaction),
               TransactionList(_userTransactions),
             ],
           ),
@@ -83,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed:() => _showNewTransactionForm(context),
+        onPressed: () => _showNewTransactionForm(context),
       ),
     );
   }
