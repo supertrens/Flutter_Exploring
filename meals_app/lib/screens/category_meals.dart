@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/meal_item.dart';
 import '../models/meal.dart';
 import '../dummy_data.dart';
 
@@ -10,11 +11,11 @@ class CategoryMealsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final routesArgs =
         ModalRoute.of(context).settings.arguments as Map<String, Object>;
-    
+
     final String categoryId = routesArgs['id'];
     final String categorytitle = routesArgs['title'];
     final Color categoryColor = routesArgs['color'];
-    final categoryMeals = DUMMY_MEALS.where((meal){
+    final categoryMeals = DUMMY_MEALS.where((meal) {
       return meal.categories.contains(categoryId);
     }).toList();
 
@@ -24,12 +25,17 @@ class CategoryMealsScreen extends StatelessWidget {
         backgroundColor: categoryColor,
       ),
       body: ListView.builder(
-        itemBuilder: (ctx , index) {
-          return ListTile(
-            leading: Icon(Icons.restaurant_menu),
-            title: Text(categoryMeals[index].title),
+        itemBuilder: (ctx, index) {
+          return MealItem(
+            id: categoryMeals[index].id,
+            title: categoryMeals[index].title,
+            imageUrl: categoryMeals[index].imageUrl,
+            duration: categoryMeals[index].duration,
+            complexity: categoryMeals[index].complexity,
+            affordability: categoryMeals[index].affordability,
           );
-        } , itemCount: categoryMeals.length,
+        },
+        itemCount: categoryMeals.length,
       ),
     );
   }
