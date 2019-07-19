@@ -1,24 +1,61 @@
 import 'package:flutter/material.dart';
 
-import '../widgets/meal_item.dart';
 import '../models/meal.dart';
-import '../dummy_data.dart';
+import '../widgets/meal_item.dart';
 
-class CategoryMealsScreen extends StatelessWidget {
+class CategoryMealsScreen extends StatefulWidget {
   static const routeName = "/category-meals";
+  final List<Meal> availableMeals;
+
+  CategoryMealsScreen(this.availableMeals);
+
+  @override
+  _CategoryMealsScreenState createState() => _CategoryMealsScreenState();
+}
+
+class _CategoryMealsScreenState extends State<CategoryMealsScreen> {
+  String categoryId;
+  String categorytitle;
+  Color categoryColor;
+  List<Meal> categoryMeals;
+  bool _loadingInitData = false;
+
+  void _removedMeal(String mealId) {
+    setState(() {
+      categoryMeals.removeWhere((meal) {
+        return meal.id == mealId;
+      });
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (!_loadingInitData) {
+      // to avoid multiple initiation
+      final routesArgs =
+          ModalRoute.of(context).settings.arguments as Map<String, Object>;
+
+      categoryId = routesArgs['id'];
+      categorytitle = routesArgs['title'];
+      categoryColor = routesArgs['color'];
+      categoryMeals = widget.availableMeals.where((meal) {
+        return meal.categories.contains(categoryId);
+      }).toList();
+
+      _loadingInitData = true;
+    }
+
+    super.didChangeDependencies();
+  }
+
+  @override
+  void initState() {
+    // ...
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final routesArgs =
-        ModalRoute.of(context).settings.arguments as Map<String, Object>;
-
-    final String categoryId = routesArgs['id'];
-    final String categorytitle = routesArgs['title'];
-    final Color categoryColor = routesArgs['color'];
-    final categoryMeals = DUMMY_MEALS.where((meal) {
-      return meal.categories.contains(categoryId);
-    }).toList();
-
     return Scaffold(
       appBar: AppBar(
         title: Text(categorytitle),
@@ -33,6 +70,7 @@ class CategoryMealsScreen extends StatelessWidget {
             duration: categoryMeals[index].duration,
             complexity: categoryMeals[index].complexity,
             affordability: categoryMeals[index].affordability,
+            removedItem: _removedMeal,
           );
         },
         itemCount: categoryMeals.length,
