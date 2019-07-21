@@ -15,11 +15,14 @@ class ProductsGrid extends StatelessWidget {
       itemCount: products.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        childAspectRatio: 3/2,
+        childAspectRatio: 3 / 2,
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
-      ) ,
-      itemBuilder: (context, index) => ProductItem(products[index]),
+      ),
+      itemBuilder: (context, index) => ChangeNotifierProvider(
+        builder: (ctx) => products[index],
+        child: ProductItem(),
+      ),
     );
   }
 }

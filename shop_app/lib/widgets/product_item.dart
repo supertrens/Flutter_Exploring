@@ -1,23 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../models/product.dart';
 import '../pages/products_details.dart';
+import '../provider/product.dart';
 
 class ProductItem extends StatelessWidget {
-  final Product currentProduct;
-
-  ProductItem(this.currentProduct);
-
   @override
   Widget build(BuildContext context) {
+    final product = Provider.of<Product>(context);
     return GridTile(
       child: GestureDetector(
         onTap: () {
-          Navigator.of(context).pushNamed(ProductDetailScreen.routeName,
-              arguments: currentProduct.id);
+          Navigator.of(context)
+              .pushNamed(ProductDetailScreen.routeName, arguments: product.id);
         },
         child: Image.network(
-          currentProduct.imageUrl,
+          product.imageUrl,
           fit: BoxFit.cover,
         ),
       ),
@@ -26,12 +24,14 @@ class ProductItem extends StatelessWidget {
         child: GridTileBar(
           backgroundColor: Colors.black87,
           leading: IconButton(
-            icon: Icon(Icons.favorite),
+            icon: Icon(
+              product.isFavorite ? Icons.favorite : Icons.favorite_border,
+            ),
             color: Theme.of(context).accentColor,
-            onPressed: () {},
+            onPressed: () => product.taggleFavoriteStatus(),
           ),
           title: Text(
-            currentProduct.title,
+            product.title,
             textAlign: TextAlign.center,
           ),
           trailing: IconButton(
