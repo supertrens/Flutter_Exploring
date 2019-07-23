@@ -42,7 +42,8 @@ class TransactionList extends StatelessWidget {
           ];
   }
 
-  Card buildCard(int index, BuildContext context) {
+  Card 
+  buildCard(int index, BuildContext context) {
     return Card(
       elevation: 5,
       margin: EdgeInsets.symmetric(vertical: 8, horizontal: 5),
