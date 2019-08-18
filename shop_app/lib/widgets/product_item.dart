@@ -21,29 +21,33 @@ class ProductItem extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-          footer: GridTileBar(
-            backgroundColor: Colors.black87,
-            leading: IconButton(
-              icon: Icon(currentProduct.isFavorite
-                  ? Icons.favorite
-                  : Icons.favorite_border),
-              color: Theme.of(context).accentColor,
-              onPressed: () {
-                currentProduct.toggleFavoriteStatus();
-              },
-            ),
-            title: Text(
-              currentProduct.title,
-              textAlign: TextAlign.center,
-            ),
-            trailing: IconButton(
-              icon: Icon(Icons.shopping_cart),
-              color: Theme.of(context).accentColor,
-              onPressed: () {},
-            ),
-          ),
+          footer: buildGridTileBar(currentProduct, context),
         ),
       ),
     );
+  }
+
+  GridTileBar buildGridTileBar(Product currentProduct, BuildContext context) {
+    return GridTileBar(
+          backgroundColor: Colors.black87,
+          leading: IconButton(
+            icon: Icon(currentProduct.isFavorite
+                ? Icons.favorite
+                : Icons.favorite_border),
+            color: Theme.of(context).accentColor,
+            onPressed: () {
+              currentProduct.toggleFavoriteStatus();
+            },
+          ),
+          title: Text(
+            currentProduct.title,
+            textAlign: TextAlign.center,
+          ),
+          trailing: IconButton(
+            icon: Icon(Icons.shopping_cart),
+            color: Theme.of(context).accentColor,
+            onPressed: () {},
+          ),
+        );
   }
 }
