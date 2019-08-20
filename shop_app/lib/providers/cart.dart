@@ -21,7 +21,7 @@ class Cart with ChangeNotifier {
   }
 
   int get itemCount {
-    return  _items.length;
+    return _items.length;
   }
 
   void addItem(String productId, double price, String title) {
@@ -34,8 +34,13 @@ class Cart with ChangeNotifier {
     notifyListeners();
   }
 
+  void removeItem(String productId) {
+    _items.remove(productId);
+    notifyListeners();
+  }
+
   double get totalAmount {
-    var total =0.0;
+    var total = 0.0;
 
     _items.forEach((key, cartItem) {
       total += (cartItem.price * cartItem.quantity);
