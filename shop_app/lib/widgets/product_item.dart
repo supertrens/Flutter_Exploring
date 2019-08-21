@@ -4,7 +4,6 @@ import './../screens/product_detail.dart';
 import './../providers/product.dart';
 import './../providers/cart.dart';
 
-
 class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -31,29 +30,43 @@ class ProductItem extends StatelessWidget {
     );
   }
 
-  GridTileBar buildGridTileBar(Product currentProduct, BuildContext context , Cart cart) {
+  GridTileBar buildGridTileBar(
+      Product currentProduct, BuildContext context, Cart cart) {
     return GridTileBar(
-          backgroundColor: Colors.black87,
-          leading: IconButton(
-            icon: Icon(currentProduct.isFavorite
-                ? Icons.favorite
-                : Icons.favorite_border),
-            color: Theme.of(context).accentColor,
-            onPressed: () {
-              currentProduct.toggleFavoriteStatus();
-            },
-          ),
-          title: Text(
-            currentProduct.title,
-            textAlign: TextAlign.center,
-          ),
-          trailing: IconButton(
-            icon: Icon(Icons.shopping_cart),
-            color: Theme.of(context).accentColor,
-            onPressed: () {
-              cart.addItem(currentProduct.id, currentProduct.price, currentProduct.title);
-            },
-          ),
-        );
+      backgroundColor: Colors.black87,
+      leading: IconButton(
+        icon: Icon(
+            currentProduct.isFavorite ? Icons.favorite : Icons.favorite_border),
+        color: Theme.of(context).accentColor,
+        onPressed: () {
+          currentProduct.toggleFavoriteStatus();
+        },
+      ),
+      title: Text(
+        currentProduct.title,
+        textAlign: TextAlign.center,
+      ),
+      trailing: IconButton(
+        icon: Icon(Icons.shopping_cart),
+        color: Theme.of(context).accentColor,
+        onPressed: () {
+          cart.addItem(
+              currentProduct.id, currentProduct.price, currentProduct.title);
+          Scaffold.of(context).hideCurrentSnackBar();
+          Scaffold.of(context).showSnackBar(SnackBar(
+            content: Text(
+              'Added Item to cart',
+            ),
+            duration: Duration(seconds: 2),
+            action: SnackBarAction(
+              label: 'UNDO',
+              onPressed: () {
+                cart.removeSingleItem(currentProduct.id);
+              },
+            ),
+          ));
+        },
+      ),
+    );
   }
 }
