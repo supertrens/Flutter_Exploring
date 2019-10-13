@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:personal_expense/widgets/transaction_list.dart';
 
-import './transaction.dart';
+import './models/transaction.dart';
 
 void main() => runApp(MyApp());
 
@@ -17,12 +17,15 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatelessWidget {
   static final Transaction trx1 = Transaction(
-      id: "t1", title: "New Shoes", amount: 69.99, date: DateTime.now());
+      id: "t1", title: "New Screen", amount: 69.99, date: DateTime.now());
 
   static final Transaction trx2 = Transaction(
       id: "t2", title: "New MBP", amount: 2669.99, date: DateTime.now());
 
   final List<Transaction> transactions = [trx1, trx2];
+
+  final _titelController = TextEditingController();
+  final _amountController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +34,6 @@ class MyHomePage extends StatelessWidget {
           title: Text('Flutter App'),
         ),
         body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Container(
@@ -43,50 +45,41 @@ class MyHomePage extends StatelessWidget {
                 child: Text("Chart!"),
               ),
             ),
-            Column(
-              children: transactions
-                  .map(
-                    (trx) => Card(
-                      child: Row(
-                        children: <Widget>[
-                          Container(
-                            margin: EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 10),
-                            padding: EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 10),
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                              color: Colors.purple,
-                              width: 2,
-                            )),
-                            child: Text(
-                              '\$${trx.amount}',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                  color: Colors.purple),
-                            ),
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                trx.title,
-                                style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                               DateFormat.yMMMMd().add_jm().format(trx.date),
-                                style:
-                                    TextStyle(fontSize: 12, color: Colors.grey),
-                              )
-                            ],
-                          )
-                        ],
-                      ),
+            Card(
+              elevation: 5,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: <Widget>[
+                  TextField(
+                    controller: _titelController,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Title',
                     ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  TextField(
+                    controller: _amountController,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Amount',
+                    ),
+                  ),
+                  FlatButton(
+                    child: Text("Add transaction"),
+                    textColor: Colors.purple,
+                    onPressed: () {
+                      _titelController.clear();
+                      _amountController.clear();
+                    },
                   )
-                  .toList(),
+                ],
+              ),
+            ),
+            Column(
+              children: transactions.map((trx) => TransactionList(trx)).toList(),
             )
           ],
         ));
