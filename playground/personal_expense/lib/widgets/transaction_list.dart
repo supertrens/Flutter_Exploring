@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class TransactionList extends StatefulWidget {
+class TransactionList extends StatelessWidget {
   final trx;
-  TransactionList(this.trx);
-  @override
-  _TransactionListState createState() => _TransactionListState();
-}
 
-class _TransactionListState extends State<TransactionList> {
+  TransactionList(this.trx);
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -23,7 +19,7 @@ class _TransactionListState extends State<TransactionList> {
               width: 2,
             )),
             child: Text(
-              '\$${widget.trx.amount}',
+              '\$${trx.amount}',
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
@@ -34,11 +30,11 @@ class _TransactionListState extends State<TransactionList> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                widget.trx.title,
+                trx.title,
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               Text(
-                DateFormat.yMMMMd().add_jm().format(widget.trx.date),
+                DateFormat.yMMMMd().add_jm().format(trx.date),
                 style: TextStyle(fontSize: 12, color: Colors.grey),
               )
             ],
