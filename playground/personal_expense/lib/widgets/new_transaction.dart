@@ -1,47 +1,61 @@
 import 'package:flutter/material.dart';
 
-class NewTransaction extends StatelessWidget {
-  final addNewTrxHandler;
-  NewTransaction(this.addNewTrxHandler);
+class NewTransaction extends StatefulWidget {
+  final Function addTx;
 
-  final _titleController = TextEditingController();
-  final _amountController = TextEditingController();
+  NewTransaction(this.addTx);
+
+  @override
+  _NewTransactionState createState() => _NewTransactionState();
+}
+
+class _NewTransactionState extends State<NewTransaction> {
+  final titleController = TextEditingController();
+
+  final amountController = TextEditingController();
+
+  void _submitData() {
+    final enteredTitle = titleController.text;
+    final enteredAmount = double.parse(amountController.text);
+
+    if (enteredTitle.isEmpty || enteredAmount <= 0) {
+      return;
+    }
+
+    widget.addTx(enteredTitle, enteredAmount);
+    
+    // close the model
+    Navigator.of(context).pop();
+
+  }
 
   @override
   Widget build(BuildContext context) {
     return Card(
       elevation: 5,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: <Widget>[
-          TextField(
-            controller: _titleController,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Title',
+      child: Container(
+        padding: EdgeInsets.all(10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: <Widget>[
+            TextField(
+              decoration: InputDecoration(labelText: 'Title'),
+              controller: titleController,
+              onSubmitted: (_) => _submitData(),
             ),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          TextField(
-            controller: _amountController,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Amount',
+            TextField(
+              decoration: InputDecoration(labelText: 'Amount'),
+              controller: amountController,
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              onSubmitted: (_) => _submitData(),
             ),
-          ),
-          FlatButton(
-            child: Text("Add transaction"),
-            textColor: Colors.purple,
-            onPressed: () {
-              addNewTrxHandler(
-                  _titleController.text, double.parse(_amountController.text));
-              _titleController.clear();
-              _amountController.clear();
-            },
-          )
-        ],
+            FlatButton(
+              child: Text('Add Transaction'),
+              textColor: Colors.purple,
+              onPressed: _submitData,
+            ),
+          ],
+        ),
       ),
     );
   }
